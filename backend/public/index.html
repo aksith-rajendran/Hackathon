@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Idea Stress Tester</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-panel: rgba(30, 41, 59, 0.7);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #8b5cf6;
+      
+      --severity-high: #ef4444;
+      --severity-medium: #f59e0b;
+      --severity-low: #10b981;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1rem;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      background: linear-gradient(to right, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    main {
+      width: 100%;
+      max-width: 1000px;
+    }
+    
+    .input-section {
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      margin-bottom: 3rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .input-section:focus-within {
+      border-color: rgba(96, 165, 250, 0.5);
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    button {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+    }
+    
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .critics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      display: none; /* hidden initially */
+    }
+    
+    .critic-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.3s ease;
+      animation: fadeUp 0.5s ease backwards;
+    }
+    
+    .critic-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .role {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .severity {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+    }
+    
+    .severity.high { background: rgba(239, 68, 68, 0.2); color: var(--severity-high); }
+    .severity.medium { background: rgba(245, 158, 11, 0.2); color: var(--severity-medium); }
+    .severity.low { background: rgba(16, 185, 129, 0.2); color: var(--severity-low); }
+    
+    .section-title {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    
+    .concern {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    
+    .criticism {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    
+    ul.questions {
+      list-style-type: none;
+    }
+    
+    ul.questions li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    
+    ul.questions li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+    
+    .error-msg {
+      color: var(--severity-high);
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>AI Idea Stress Tester</h1>
+    <p class="subtitle">Submit your startup idea and face the gauntlet of 5 unforgiving AI critics.</p>
+  </header>
+  
+  <main>
+    <div class="input-section">
+      <textarea id="ideaInput" placeholder="e.g. An app that helps college students find internships..."></textarea>
+      <div style="text-align: right;">
+        <button id="submitBtn">
+          <span>Evaluate Idea</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+      </div>
+      <div id="errorMsg" class="error-msg"></div>
+    </div>
+    
+    <div class="critics-grid" id="criticsGrid">
+      <!-- Cards will be injected here -->
+    </div>
+  </main>
+
+  <script>
+    const submitBtn = document.getElementById('submitBtn');
+    const ideaInput = document.getElementById('ideaInput');
+    const spinner = document.getElementById('spinner');
+    const btnText = submitBtn.querySelector('span');
+    const criticsGrid = document.getElementById('criticsGrid');
+    const errorMsg = document.getElementById('errorMsg');
+
+    submitBtn.addEventListener('click', async () => {
+      const idea = ideaInput.value.trim();
+      if (!idea) {
+        showError('Please enter an idea to evaluate.');
+        return;
+      }
+      
+      setLoading(true);
+      errorMsg.style.display = 'none';
+      criticsGrid.style.display = 'none';
+      criticsGrid.innerHTML = '';
+      
+      try {
+        const response = await fetch('/api/critique', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idea })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to evaluate idea.');
+        }
+        
+        renderCritics(data.critics);
+      } catch (err) {
+        showError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    });
+    
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      spinner.style.display = isLoading ? 'block' : 'none';
+      btnText.style.display = isLoading ? 'none' : 'block';
+    }
+    
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.style.display = 'block';
+    }
+    
+    function renderCritics(critics) {
+      criticsGrid.style.display = 'grid';
+      
+      critics.forEach((critic, index) => {
+        const delay = index * 0.1;
+        
+        const card = document.createElement('div');
+        card.className = 'critic-card';
+        card.style.animationDelay = \`\${delay}s\`;
+        
+        const severityClass = critic.severity.toLowerCase();
+        
+        let questionsHtml = '';
+        if (critic.questions && Array.isArray(critic.questions)) {
+          questionsHtml = critic.questions.map(q => \`<li>\${q}</li>\`).join('');
+        }
+        
+        card.innerHTML = \`
+          <div class="card-header">
+            <div class="role">\${critic.role}</div>
+            <div class="severity \${severityClass}">\${critic.severity}</div>
+          </div>
+          <div class="concern">\${critic.concern}</div>
+          <div class="criticism">\${critic.criticism}</div>
+          
+          <div class="section-title">Critical Questions</div>
+          <ul class="questions">
+            \${questionsHtml}
+          </ul>
+        \`;
+        
+        criticsGrid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
