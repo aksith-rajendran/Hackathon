@@ -15,7 +15,7 @@ import {
 } from '../services/api.js';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('input');
   const [idea, setIdea] = useState('');
   const [problemStatement, setProblemStatement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +29,32 @@ export default function Home() {
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  // Handle navigation tab selection with smooth scrolling
+  const handleSelectTab = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'input') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const inputEl = document.getElementById('idea-input');
+      if (inputEl) inputEl.focus();
+    } else if (tab === 'critics') {
+      const el = document.getElementById('critics-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // If not tested yet, scroll to input
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else if (tab === 'analysis') {
+      const el = document.getElementById('analysis-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // If not tested yet, scroll to input
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  };
+
   const handleStressTest = async (overrideDemoMode = isDemoMode) => {
     if (!idea.trim()) return;
 
@@ -39,25 +65,25 @@ export default function Home() {
     setAnalysis(null);
 
     const fullIdeaPayload = problemStatement.trim()
-      ? `${idea.trim()}\n\nTarget Problem: ${problemStatement.trim()}`
+      ? `${idea.trim()}\n\nProblem Being Solved: ${problemStatement.trim()}`
       : idea.trim();
 
     try {
       // Step 0: "Calling Investor..."
       setLoadingStepIndex(0);
-      await sleep(500);
+      await sleep(350);
 
       // Step 1: "Calling Customer..."
       setLoadingStepIndex(1);
-      await sleep(500);
+      await sleep(350);
 
       // Step 2: "Calling Regulator..."
       setLoadingStepIndex(2);
-      await sleep(500);
+      await sleep(350);
 
       // Step 3: "Calling Security Expert..."
       setLoadingStepIndex(3);
-      await sleep(500);
+      await sleep(350);
 
       // Step 4: "Calling Competitor..."
       setLoadingStepIndex(4);
@@ -69,11 +95,11 @@ export default function Home() {
         critiqueResponse = await getCritiques(fullIdeaPayload);
       }
 
-      await sleep(500);
+      await sleep(400);
 
-      // Step 5: "AI is analyzing the attacks..."
+      // Step 5: "AI is analyzing weaknesses..."
       setLoadingStepIndex(5);
-      await sleep(600);
+      await sleep(500);
 
       // Step 6: "Building improved idea..."
       setLoadingStepIndex(6);
@@ -85,17 +111,18 @@ export default function Home() {
         analysisResponse = await getAnalysis(fullIdeaPayload, critiqueResponse.critics);
       }
 
-      await sleep(500);
+      await sleep(400);
 
       setCritics(critiqueResponse.critics || []);
       setAnalysis(analysisResponse);
       setIsLoading(false);
+      setActiveTab('critics');
 
       setTimeout(() => {
         if (resultsRef.current) {
           resultsRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-      }, 100);
+      }, 150);
 
     } catch (err) {
       console.error('Stress test pipeline error:', err);
@@ -119,15 +146,19 @@ export default function Home() {
     setCritics([]);
     setAnalysis(null);
     setError(null);
+    setActiveTab('input');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="dashboard-layout">
-      {/* Sidebar */}
+      {/* Clean, Functional Left Sidebar */}
       <Sidebar
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={handleSelectTab}
+        hasCritics={critics.length > 0}
+        hasAnalysis={!!analysis}
+        onReset={handleReset}
         isDemoMode={isDemoMode}
         onToggleDemo={() => setIsDemoMode((prev) => !prev)}
       />
@@ -139,7 +170,7 @@ export default function Home() {
           onToggleDemoMode={() => setIsDemoMode((prev) => !prev)}
         />
 
-        {/* Top Hero Grid: Featured Session Input + Threat Metrics */}
+        {/* Top Section: Idea Input + Simple Explanatory Summary */}
         <div className="dashboard-hero-grid">
           <IdeaInput
             idea={idea}
@@ -163,7 +194,7 @@ export default function Home() {
           />
         )}
 
-        {/* 7-Step Loading Sequence */}
+        {/* Step-by-Step Loading Sequence */}
         {isLoading && (
           <LoadingSequence currentStepIndex={loadingStepIndex} />
         )}

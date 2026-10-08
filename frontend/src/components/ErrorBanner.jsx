@@ -14,10 +14,10 @@ export default function ErrorBanner({
 
       <div style={{ flexGrow: 1 }}>
         <h4 style={{ color: '#ffffff', fontWeight: 700, fontSize: '0.98rem', marginBottom: '4px' }}>
-          Simulation Interrupted
+          Connection Issue
         </h4>
         <p style={{ color: '#d1d5db', fontSize: '0.86rem', marginBottom: '12px' }}>
-          {error.message || 'Unable to connect to the AI assessment service. You can retry or switch to offline Demo Mode.'}
+          {error.message || 'Could not connect to the backend server. Make sure it is running on port 5000, or switch to Demo Mode.'}
         </p>
 
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -29,7 +29,7 @@ export default function ErrorBanner({
               onClick={onRetry}
             >
               <RotateCcw size={13} />
-              Retry Connection
+              Try Again
             </button>
           )}
 
@@ -41,7 +41,7 @@ export default function ErrorBanner({
               onClick={onSwitchToDemo}
             >
               <Zap size={13} style={{ color: '#f59e0b' }} />
-              Switch to Demo Mode
+              Use Demo Mode
             </button>
           )}
         </div>

@@ -1,4 +1,4 @@
-const { analyzeIdea } = require('./services/analyzer');
+import { analyzeIdea } from './services/analyzer.js';
 
 async function runTest() {
   const idea = "An app that helps college students find internships.";
@@ -36,15 +36,16 @@ async function runTest() {
   ];
 
   try {
-    console.log("Testing with Idea 1: ", idea);
+    console.log("Testing with Idea: ", idea);
     const result = await analyzeIdea({ idea, critics });
-    console.log("Analysis Result:");
+    console.log("\nAnalysis Result:");
     console.log(JSON.stringify(result, null, 2));
     
-    // Verify JSON structure conceptually
+    // Verifications
     console.log("\nVerifications:");
     console.log("- JSON structure valid:", !!(result.biggestWeaknesses && result.improvements && result.improvedIdea));
     console.log("- Number of weaknesses:", result.biggestWeaknesses?.length);
+    console.log("- Number of improvements:", result.improvements?.length);
     console.log("- Improved idea is different from original:", result.improvedIdea !== idea);
 
   } catch (error) {

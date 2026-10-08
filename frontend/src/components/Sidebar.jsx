@@ -1,29 +1,22 @@
 import React from 'react';
 import {
-  LayoutDashboard,
-  BarChart3,
-  Flame,
-  Users2,
-  DollarSign,
-  MessageSquare,
-  FileText,
-  Settings,
+  Lightbulb,
+  Users,
   Sparkles,
-  ShieldCheck,
-  Zap
+  RotateCcw,
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, onSelectTab, isDemoMode, onToggleDemo }) {
-  const navItems = [
-    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'stresstest', label: 'Stress Test', icon: Flame },
-    { id: 'personas', label: 'AI Personas', icon: Users2 },
-    { id: 'vulnerabilities', label: 'Vulnerabilities', icon: BarChart3 },
-    { id: 'strategy', label: 'Pivot Strategy', icon: Sparkles },
-    { id: 'reports', label: 'Audit Reports', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
-  ];
-
+export default function Sidebar({
+  activeTab,
+  onSelectTab,
+  hasCritics,
+  hasAnalysis,
+  onReset,
+  isDemoMode,
+  onToggleDemo
+}) {
   return (
     <aside className="dashboard-sidebar">
       {/* Brand Logo */}
@@ -31,43 +24,76 @@ export default function Sidebar({ activeTab, onSelectTab, isDemoMode, onToggleDe
         <div className="logo-badge">
           <Zap size={22} fill="white" />
         </div>
-        <span className="logo-text">IdeaGuard</span>
+        <span className="logo-text">Idea Tester</span>
       </div>
 
-      {/* Navigation */}
+      {/* Working Navigation Buttons */}
       <nav className="sidebar-nav">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              className={`nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => onSelectTab(item.id)}
-            >
-              <Icon size={19} />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
+        {/* 1. Input Idea Button */}
+        <button
+          type="button"
+          className={`nav-item ${activeTab === 'input' ? 'active' : ''}`}
+          onClick={() => onSelectTab('input')}
+        >
+          <Lightbulb size={19} />
+          <span>Input Idea</span>
+        </button>
+
+        {/* 2. 5 Critics Button */}
+        <button
+          type="button"
+          className={`nav-item ${activeTab === 'critics' ? 'active' : ''}`}
+          onClick={() => onSelectTab('critics')}
+        >
+          <Users size={19} />
+          <span>5 Critics</span>
+          {hasCritics && (
+            <span className="sidebar-pill-badge">5</span>
+          )}
+        </button>
+
+        {/* 3. Final Analysis Button */}
+        <button
+          type="button"
+          className={`nav-item ${activeTab === 'analysis' ? 'active' : ''}`}
+          onClick={() => onSelectTab('analysis')}
+        >
+          <Sparkles size={19} />
+          <span>Final Analysis</span>
+          {hasAnalysis && (
+            <CheckCircle2 size={15} style={{ color: '#22c55e', marginLeft: 'auto' }} />
+          )}
+        </button>
+
+        {/* 4. Reset Button */}
+        <button
+          type="button"
+          className="nav-item"
+          onClick={onReset}
+          title="Clear form and test a new idea"
+        >
+          <RotateCcw size={19} />
+          <span>Reset Form</span>
+        </button>
       </nav>
 
-      {/* Pro Plan Card at Bottom */}
+      {/* Simple Status & Engine Mode */}
       <div className="sidebar-pro-box">
         <div className="pro-header">
-          <ShieldCheck size={18} style={{ color: '#a855f7' }} />
-          <span>Pro Defense</span>
+          <Zap size={17} style={{ color: '#a855f7' }} />
+          <span>Engine Status</span>
         </div>
         <p className="pro-desc">
-          Unlock unlimited adversarial AI personas and automated pitch redlines.
+          {isDemoMode
+            ? 'Running in safe offline demo mode.'
+            : 'Connected to live backend engine on port 5000.'}
         </p>
         <button
           type="button"
           className="btn-upgrade"
           onClick={onToggleDemo}
         >
-          {isDemoMode ? 'Live Mode' : 'Demo Fallback'}
+          {isDemoMode ? 'Switch to Live Engine' : 'Switch to Demo Mode'}
         </button>
       </div>
     </aside>

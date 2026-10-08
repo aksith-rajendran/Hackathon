@@ -4,27 +4,26 @@ import {
   Sparkles,
   Lightbulb,
   ShieldAlert,
-  Eye,
-  TrendingUp,
-  DollarSign,
-  ArrowUpRight
+  Users,
+  CheckCircle,
+  ArrowRight
 } from 'lucide-react';
 
 const SAMPLE_IDEAS = [
   {
-    title: 'AI Contract Copilot for Freelancers',
-    idea: 'An AI-powered legal copilot for independent contractors that redlines client contracts, highlights predatory non-compete clauses, and automatically negotiates fair payment terms via email.',
-    problem: 'Freelancers lose thousands every year signing one-sided contracts because hiring lawyers is too expensive ($300+/hr).'
+    title: '🎓 College Internship App',
+    idea: 'We want to create an app that helps college students find internships.',
+    problem: 'College students struggle to get their resumes noticed, and companies get flooded with generic applications.'
   },
   {
-    title: 'Uber for Private Gourmet Chefs',
-    idea: 'On-demand marketplace connecting certified local gourmet chefs with busy households for in-home restaurant-quality dinner meal prep.',
-    problem: 'Eating healthy takeout every night is bland and expensive, while private chefs have traditionally been reserved only for ultra-wealthy elites.'
+    title: '⚖️ Freelancer Contract Helper',
+    idea: 'An AI tool that reads client contracts for freelancers and highlights bad terms before they sign.',
+    problem: 'Freelancers sign risky contracts because hiring a lawyer costs too much.'
   },
   {
-    title: 'Decentralized Encrypted Patient Vault',
-    idea: 'A zero-knowledge medical records vault where patients own their encrypted EHR data on a secure distributed ledger and grant temporary cryptographic access to visiting doctors.',
-    problem: 'Medical history is fragmented across dozens of disconnected hospital portals, leading to fatal diagnostic errors.'
+    title: '🥗 Home Chef Meal Prep',
+    idea: 'An app connecting local home chefs with busy families to cook healthy dinners at home.',
+    problem: 'Ordering takeout every day is unhealthy and expensive, while private chefs are usually only for the rich.'
   }
 ];
 
@@ -56,26 +55,26 @@ export default function IdeaInput({
     <div className="theme-card featured-session-card">
       <div className="featured-header-badge">
         <Sparkles size={14} />
-        FEATURED ADVERSARIAL SESSION
+        STEP 1 • ENTER YOUR IDEA
       </div>
 
-      <h2 className="featured-title">AI Attack Chamber</h2>
+      <h2 className="featured-title">Test Your Startup Idea</h2>
       <p className="featured-role-subtitle">
-        Simulate hostile critique across 5 opposing industry perspectives.
+        Tell us what you want to build. 5 AI critics will find the biggest flaws and show you how to fix them.
       </p>
 
       <form onSubmit={handleSubmit}>
         {/* Main Idea Input */}
         <div className="input-block-dark">
           <div className="input-block-label">
-            <span>Startup / Project Idea *</span>
-            <span style={{ color: '#a855f7' }}>Core Proposition</span>
+            <span>Your Idea *</span>
+            <span style={{ color: '#a855f7' }}>Required</span>
           </div>
           <textarea
             id="idea-input"
             className="dark-textarea"
             rows={3}
-            placeholder="Describe your startup concept, target audience, and business model in 2-3 sentences..."
+            placeholder="e.g. We want to create an app that helps college students find internships."
             value={idea}
             onChange={(e) => setIdea(e.target.value)}
             disabled={isLoading}
@@ -86,14 +85,14 @@ export default function IdeaInput({
         {/* Optional Problem Statement */}
         <div className="input-block-dark">
           <div className="input-block-label">
-            <span>Problem Statement</span>
+            <span>What problem does it solve?</span>
             <span style={{ color: 'var(--text-dim)' }}>Optional</span>
           </div>
           <textarea
             id="problem-input"
             className="dark-textarea"
             rows={2}
-            placeholder="What core problem or inefficiency are you solving? Why now?"
+            placeholder="Explain why people need this or what is broken today..."
             value={problemStatement}
             onChange={(e) => setProblemStatement(e.target.value)}
             disabled={isLoading}
@@ -101,19 +100,24 @@ export default function IdeaInput({
         </div>
 
         {/* Quick Sample Prompts */}
-        <div className="sample-chips-row">
-          {SAMPLE_IDEAS.map((sample, idx) => (
-            <button
-              key={idx}
-              type="button"
-              className="sample-chip"
-              onClick={() => handleSelectSample(sample)}
-              disabled={isLoading}
-            >
-              <Lightbulb size={12} style={{ color: '#ec4899' }} />
-              {sample.title}
-            </button>
-          ))}
+        <div style={{ marginBottom: '14px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px', display: 'block' }}>
+            Click an example to test quickly:
+          </span>
+          <div className="sample-chips-row">
+            {SAMPLE_IDEAS.map((sample, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className="sample-chip"
+                onClick={() => handleSelectSample(sample)}
+                disabled={isLoading}
+              >
+                <Lightbulb size={12} style={{ color: '#ec4899' }} />
+                {sample.title}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Primary Purple Action Button */}
@@ -124,61 +128,55 @@ export default function IdeaInput({
           disabled={!idea.trim() || isLoading}
         >
           <Flame size={17} />
-          {isLoading ? 'Running Attacks...' : 'Stress Test My Idea'}
+          {isLoading ? 'Testing Your Idea Across 5 Critics...' : 'Start Stress Test'}
         </button>
       </form>
 
-      {/* Stats Row at bottom of card (matches "Total Followers | Profile Views | Engagement Rate | Est. Earnings") */}
+      {/* Simple Information Badges */}
       <div className="featured-stats-row">
         <div className="stat-item">
           <div className="stat-label">
-            <Flame size={13} style={{ color: '#c026d3' }} />
-            <span>AI Personas</span>
+            <Users size={13} style={{ color: '#c026d3' }} />
+            <span>5 Critics</span>
           </div>
-          <div className="stat-value">5.0</div>
+          <div className="stat-value">Active</div>
           <div className="stat-trend">
-            <ArrowUpRight size={13} />
-            <span>100% active</span>
-          </div>
-        </div>
-
-        <div className="stat-item">
-          <div className="stat-label">
-            <Eye size={13} style={{ color: '#38bdf8' }} />
-            <span>Attack Vectors</span>
-          </div>
-          <div className="stat-value">15+</div>
-          <div className="stat-trend">
-            <ArrowUpRight size={13} />
-            <span>Live scrutiny</span>
+            <span>5 viewpoints</span>
           </div>
         </div>
 
         <div className="stat-item">
           <div className="stat-label">
             <ShieldAlert size={13} style={{ color: '#f43f5e' }} />
-            <span>Threat Severity</span>
+            <span>Risk Check</span>
           </div>
           <div className="stat-value">
-            {critics.length > 0 ? (highSeverityCount >= 2 ? 'HIGH' : 'MED') : 'ELEVATED'}
+            {critics.length > 0 ? (highSeverityCount > 0 ? `${highSeverityCount} High` : 'Clear') : 'Ready'}
           </div>
-          <div className={`stat-trend ${highSeverityCount >= 2 ? 'high-risk' : 'medium-risk'}`}>
-            <ArrowUpRight size={13} />
-            <span>{critics.length > 0 ? `${highSeverityCount} Critical` : 'Hostile Audit'}</span>
+          <div className="stat-trend">
+            <span>Finds weak spots</span>
           </div>
         </div>
 
         <div className="stat-item">
           <div className="stat-label">
-            <DollarSign size={13} style={{ color: '#22c55e' }} />
-            <span>Moat Strength</span>
+            <CheckCircle size={13} style={{ color: '#22c55e' }} />
+            <span>Action Plan</span>
           </div>
-          <div className="stat-value">
-            {critics.length > 0 ? 'FORTIFY' : 'TESTING'}
-          </div>
+          <div className="stat-value">Included</div>
           <div className="stat-trend">
-            <ArrowUpRight size={13} />
-            <span>Unit Economics</span>
+            <span>Fixes & tips</span>
+          </div>
+        </div>
+
+        <div className="stat-item">
+          <div className="stat-label">
+            <Sparkles size={13} style={{ color: '#38bdf8' }} />
+            <span>New Pitch</span>
+          </div>
+          <div className="stat-value">Rewritten</div>
+          <div className="stat-trend">
+            <span>Better version</span>
           </div>
         </div>
       </div>

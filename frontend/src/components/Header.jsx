@@ -1,18 +1,12 @@
 import React from 'react';
-import { Calendar, Bell } from 'lucide-react';
+import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function Header({ isDemoMode, onToggleDemoMode }) {
-  const currentDateStr = new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  }).format(new Date());
-
   return (
     <header className="dashboard-topbar">
       <div className="topbar-titles">
-        <h1>Idea Stress Tester</h1>
-        <p>Attack. Analyze. Fortify.</p>
+        <h1>AI Idea Stress Tester</h1>
+        <p>Find the flaws in your startup idea before you build it.</p>
       </div>
 
       <div className="topbar-actions">
@@ -20,19 +14,15 @@ export default function Header({ isDemoMode, onToggleDemoMode }) {
           type="button"
           className="date-pill"
           onClick={onToggleDemoMode}
-          title="Toggle Live / Demo mode"
+          title="Click to toggle between live backend and demo mode"
         >
-          <Calendar size={15} style={{ color: '#a855f7' }} />
-          <span>{isDemoMode ? 'Demo Mode (Offline Safe)' : `${currentDateStr} • Live Engine`}</span>
+          <Sparkles size={15} style={{ color: '#a855f7' }} />
+          <span>{isDemoMode ? 'Demo Mode (Offline Safe)' : 'Live Engine (Port 5000)'}</span>
         </button>
 
-        <button type="button" className="icon-btn-pill" aria-label="Notifications">
-          <Bell size={17} />
-          <span className="notification-dot" />
-        </button>
-
-        <div className="user-avatar-pill" title="AI Team Lead">
-          <span style={{ color: '#c084fc' }}>IG</span>
+        <div className="header-status-badge">
+          <CheckCircle2 size={15} style={{ color: '#22c55e' }} />
+          <span>Connected</span>
         </div>
       </div>
     </header>
